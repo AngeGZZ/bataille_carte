@@ -1,2 +1,3 @@
 # La Bataille
-Jeu de la bataille implémenté en Python 
+
+Jeu de la bataille implémenté en Python
