@@ -14,6 +14,10 @@
 2
 
 Si égalite : bataille on pioche une carte retournée puis une autre et on compare
+
+CREATION PAQUET OK
+MELANGE PAQUET OK
+DISTRIBUER SUR LES DEUX FILES NO
 """
 
 from tkinter import *
@@ -42,12 +46,16 @@ class Carte:
         x = f"{self.nom} de {self.couleur}"
         return x
 
-    def compare(self, other):
+    def __lt__(self, other):
         if self.valeur < other.valeur:
             return 0
-        elif other.valeur < self.valeur:
+
+    def __gt__(self, other):
+        if self.valeur > other.valeur:
             return 1
-        else:
+
+    def __eq__(self, other):
+        if self.valeur == other.valeur:
             return 2
 
 
@@ -100,34 +108,50 @@ def createPaquet():
     return paquet
 
 
+class Cellule:
+    def __init__(self, v, s):
+        self.valeur = v
+        self.suivante = s
+
+
+class File:
+    def __init__(self):
+        self.tete = None
+        self.queue = None
+
+    def est_vide(self):
+        return self.tete is None
+
+    def ajouter(self, x):
+        c = Cellule(x, None)
+        if self.est_vide():
+            self.tete = c
+        else:
+            self.queue.suivante = c
+        self.queue = c
+
+    def __repr__(self):
+        return str(self.tete.valeur)
+
+
+def distribuer(paquet):
+    paquet = melange(paquet)
+    paquet1 = File()
+    paquet2 = File()
+
+    for i in range(0, 51):
+        if i % 2 == 0:
+            paquet1.ajouter(paquet[i])
+        else:
+            paquet2.ajouter(paquet[i])
+    return paquet1, paquet2
+
+
 def melange(t):
     random.shuffle(t)
     return t
 
 
-x = createPaquet()
-print(x)
-#y = Carte("As", 14, "coeur")
-# print(y)
-print("-----------------------------")
-y = melange(x)
-print(y)
-
-carte1 = Carte("As", 14, "carreau")
-print(carte1)
-carte2 = Carte("10", 10, "coeur")
-print(carte1.compare(carte2))
-"""
-CREATION PAQUET OK
-MELANGE PAQUET OK
-DISTRIBUER SUR LES DEUX FILES NO
-
-
-
-"""
-"""
-# distribuer
-
-# paquetA
-paquetB
-"""
+paquet = createPaquet()
+print(distribuer(paquet))
+# fenetre.mainloop()
