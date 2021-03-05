@@ -22,6 +22,8 @@ DISTRIBUER SUR LES DEUX FILES NO
 
 from tkinter import *
 import random
+from lib.libcard import *
+from lib.libstack import *
 
 fenetre = Tk()
 fenetre.title("Bataille")
@@ -30,33 +32,6 @@ fenetre.geometry("1200x800")
 fenetre.resizable(width=False, height=False)
 
 winner = False
-
-
-class Carte:
-    def __init__(self, nom, valeur, couleur):
-        self.nom = nom
-        self.valeur = valeur
-        self.couleur = couleur
-
-    def __str__(self):
-        x = f"{self.nom} de {self.couleur}"
-        return x
-
-    def __repr__(self):
-        x = f"{self.nom} de {self.couleur}"
-        return x
-
-    def __lt__(self, other):
-        if self.valeur < other.valeur:
-            return 0
-
-    def __gt__(self, other):
-        if self.valeur > other.valeur:
-            return 1
-
-    def __eq__(self, other):
-        if self.valeur == other.valeur:
-            return 2
 
 
 def createPaquet():
@@ -108,43 +83,17 @@ def createPaquet():
     return paquet
 
 
-class Cellule:
-    def __init__(self, v, s):
-        self.valeur = v
-        self.suivante = s
-
-
-class File:
-    def __init__(self):
-        self.tete = None
-        self.queue = None
-
-    def est_vide(self):
-        return self.tete is None
-
-    def ajouter(self, x):
-        c = Cellule(x, None)
-        if self.est_vide():
-            self.tete = c
-        else:
-            self.queue.suivante = c
-        self.queue = c
-
-    def __repr__(self):
-        return str(self.tete.valeur)
-
-
 def distribuer(paquet):
     paquet = melange(paquet)
     paquet1 = File()
     paquet2 = File()
-
-    for i in range(0, 51):
+    print(f"{paquet}\n\n")
+    for i in range(0, 52):
         if i % 2 == 0:
             paquet1.ajouter(paquet[i])
         else:
             paquet2.ajouter(paquet[i])
-    return paquet1, paquet2
+    return str(paquet1) + "\n\n" + str(paquet2)
 
 
 def melange(t):
