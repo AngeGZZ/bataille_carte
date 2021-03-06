@@ -17,21 +17,25 @@ Si égalite : bataille on pioche une carte retournée puis une autre et on compa
 
 CREATION PAQUET OK
 MELANGE PAQUET OK
-DISTRIBUER SUR LES DEUX FILES NO
+DISTRIBUER SUR LES DEUX FILES OK
+
 """
-
-from tkinter import *
 import random
-from lib.libcard import *
-from lib.libstack import *
+from lib.libcard import Carte
+from lib.libstack import Pile, File, Cellule
+from window.window import window
 
-fenetre = Tk()
-fenetre.title("Bataille")
-fenetre.config(bg="#87CEEB")
-fenetre.geometry("1200x800")
-fenetre.resizable(width=False, height=False)
+# initializing the ui
+window()
 
+# defining the global variable
 winner = False
+paquet1 = None
+paquet2 = None
+pile1 = None
+pile2 = None
+
+# creating 52 cards packets
 
 
 def createPaquet():
@@ -82,8 +86,12 @@ def createPaquet():
             paquet.append(Carte("As", i, "trefle"))
     return paquet
 
+# Giving cards shuffled to both players
+
 
 def distribuer(paquet):
+    global paquet1
+    global paquet2
     paquet = melange(paquet)
     paquet1 = File()
     paquet2 = File()
@@ -93,14 +101,55 @@ def distribuer(paquet):
             paquet1.ajouter(paquet[i])
         else:
             paquet2.ajouter(paquet[i])
-    return str(paquet1) + "\n\n" + str(paquet2)
+    return paquet1, paquet2
+
+# shuffling cards with random module
 
 
 def melange(t):
     random.shuffle(t)
     return t
 
+# creating the stacks of cards
+
+
+def pile_comparer_create():
+    global pile1
+    global pile2
+    pile1 = Pile()
+    pile2 = Pile()
+
+
+# Comparing stacks to tell the winner
+
+
+def pile_comparer():
+    global pile1
+    global pile2
+    if pile1.est_vide() and pile2.est_vide():
+        pile1.push(paquet1.retirer())
+        pile2.push(paquet2.retirer())
+        if pile1.contenu.valeur > pile2.contenu.valeur:
+            print("le joueur 1 remporte la manche")
+            # enlever les deux cartes mettre ds bon paquet
+        elif pile2.contenu.valeur > pile1.contenu.valeur:
+            print("le joueur 2 remporte la manche")
+            # enlever les deux cartes mettre ds bon paquet
+    else:
+        print("bataille")
+        pile1.push(paquet1.retirer())  # middle card
+        pile2.push(paquet2.retirer())  # middle card
+        pile1.push(paquet1.retirer())  # top card
+        pile2.push(paquet2.retirer())  # top card
+        # Si égalite : bataille on pioche une carte retournée puis une autre et on compare
+
 
 paquet = createPaquet()
 print(distribuer(paquet))
-# fenetre.mainloop()
+pile_comparer_create()
+print(pile_comparer())
+
+p = Pile()
+p.push(1)
+p.push(3)
+print(len(p))
